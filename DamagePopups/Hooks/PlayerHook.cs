@@ -2,6 +2,7 @@ using DamagePopups.Behaviours;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DamagePopups.Patches
 {
@@ -11,7 +12,7 @@ namespace DamagePopups.Patches
         {
             On.Player.TakeDamage += MMHook_Postfix_ShowDamagePopup;
             On.Player.RPCA_Heal += MMHook_Postfix_ShowHealPopup;
-            On.Player.CallDie += MMHook_Postfix_ShowInstakillPopup;
+            On.Player.RPCA_PlayerDie += MMHook_Postfix_ShowInstakillPopup;
             On.Player.CallRevive += MMHook_Postfix_ShowRevivePopup;
         }
 
@@ -30,12 +31,12 @@ namespace DamagePopups.Patches
             }
         }
 
-        private static void MMHook_Postfix_ShowInstakillPopup(On.Player.orig_CallDie orig, Player self)
+        private static void MMHook_Postfix_ShowInstakillPopup(On.Player.orig_RPCA_PlayerDie orig, Player self)
         {
             orig(self);
-            if (!self.data.recentDamage.Any() && self.data.remainingOxygen >= 0f && !self.ai && !self.data.dead && !(self.Center().y < -100f || self.Center().y > 100f))
+            if (!self.data.recentDamage.Any() && self.data.remainingOxygen >= 0f && !(self.Center().y < -100f || self.Center().y > 100f))
             {
-                InstantiatePopupAtPlayer(self, Color.red, "INSTAKILL!");
+                InstantiatePopupAtPlayer(self, (Color.red + Color.black) / 2, "INSTAKILL!");
             }
         }
 
@@ -56,6 +57,7 @@ namespace DamagePopups.Patches
             _textMesh.color = color;
             _textMesh.text = text;
             _textMesh.fontSize = 5f;
+            _textMesh.font = Plugin.PopupFont;
             _damagePopup.AddComponent<PopupFadeOuter>();
             Object.Destroy(GameObject.Find("New Game Object"));
         }

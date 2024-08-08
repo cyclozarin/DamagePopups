@@ -1,0 +1,38 @@
+[config]
+schemaVersion = "0.0.1"
+
+[general]
+repository = "https://thunderstore.io"
+
+[package]
+namespace = "cyclozarin"
+name = "DamagePopups"
+description = "Mod for Content Warning that displays change of players health as a small popups"
+websiteUrl = "https://github.com/cyclozarin/DamagePopups"
+containsNsfwContent = false
+[package.dependencies]
+BepInEx-BepInExPack = "5.4.2100"
+Hamunii-AutoHookGenPatcher = "1.0.2"
+
+[build]
+icon = "icon.png"
+readme = "../../README.md"
+outdir = "../dist"
+
+[[build.copy]]
+source = "../bin/Release/netstandard2.1/DamagePopups.dll"
+target = "/BepInEx/plugins/DamagePopups/"
+
+[[build.copy]]
+source = "../../CHANGELOG.md"
+target = "/"
+
+[[build.copy]]
+source = "../../LICENSE.txt"
+target = "/"
+
+[publish]
+communities = [ "content-warning" ]
+[publish.categories]
+content-warning = [ "mods", "bepinex", "vanillacomp", "clientside" ]
+# For a list of valid tags, look at the slug values in https://thunderstore.io/api/experimental/community/content-warning/category/
