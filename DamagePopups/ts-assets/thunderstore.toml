@@ -20,8 +20,8 @@ readme = "../../README.md"
 outdir = "../dist"
 
 [[build.copy]]
-source = "../bin/Release/netstandard2.1/DamagePopups.dll"
-target = "BepInEx/plugins/DamagePopups/"
+source = "../bin/Release/netstandard2.1/cyclozarin.contentwarning.DamagePopups.dll"
+target = "/BepInEx/plugins/DamagePopups/"
 
 [[build.copy]]
 source = "../../CHANGELOG.md"
