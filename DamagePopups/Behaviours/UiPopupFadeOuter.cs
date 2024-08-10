@@ -4,16 +4,14 @@ using UnityEngine;
 
 namespace DamagePopups.Behaviours
 {
-    internal class PopupFadeOuter : MonoBehaviour
+    internal class UiPopupFadeOuter : MonoBehaviour
     {
-        private Vector3 _randomDesiredFadeOutPosition;
         private float _fadeOutTime = 3f;
-        private TextMeshPro _textMesh = null!;
+        private TextMeshProUGUI _textMesh = null!;
 
         private void Start()
         {
-            _textMesh = GetComponent<TextMeshPro>();
-            _randomDesiredFadeOutPosition = gameObject.transform.position + Random.insideUnitSphere;
+            _textMesh = GetComponent<TextMeshProUGUI>();
             StartCoroutine(MoveAndFadeOut());
         }
 
@@ -24,7 +22,7 @@ namespace DamagePopups.Behaviours
             {
                 _counter += Time.deltaTime;
                 float _smoothValue = _counter / _fadeOutTime;
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, _randomDesiredFadeOutPosition, _fadeOutTime);
+                gameObject.transform.localPosition = Vector3.Lerp(gameObject.transform.localPosition, gameObject.transform.localPosition + gameObject.transform.right, _fadeOutTime);
                 _textMesh.color = Color.Lerp(_textMesh.color, Color.black, _smoothValue);
                 _textMesh.alpha = Mathf.Lerp(_textMesh.alpha, 0f, _smoothValue);
                 yield return null;

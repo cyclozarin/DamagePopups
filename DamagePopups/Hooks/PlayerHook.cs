@@ -18,6 +18,11 @@ namespace DamagePopups.Patches
         private static void MMHook_Postfix_ShowHealPopup(On.Player.orig_RPCA_Heal orig, Player self, float healAmount)
         {
             orig(self, healAmount);
+            if (self.photonView.IsMine)
+            {
+                InstantiateLocalPopup(Color.green, $"+{Mathf.RoundToInt(healAmount)}");
+                return;
+            }
             InstantiatePopupAtPlayer(self, Color.green, $"+{Mathf.RoundToInt(healAmount)}");
         }
 
@@ -26,7 +31,13 @@ namespace DamagePopups.Patches
             orig(self, damage);
             if (!self.ai && !self.data.dead && !(self.Center().y < -100f || self.Center().y > 100f))
             {
-                InstantiatePopupAtPlayer(self, Color.red, $"{(self.data.recentDamage.Sum(x => x.damage) >= Player.PlayerData.maxHealth ? "INSTAKILL!" : $"-{Mathf.RoundToInt(damage)}")}");
+                string _damageString = $"{(self.data.recentDamage.Sum(x => x.damage) >= Player.PlayerData.maxHealth ? "INSTAKILL!" : $"-{Mathf.RoundToInt(damage)}")}";
+                if (self.photonView.IsMine)
+                {
+                    InstantiateLocalPopup(Color.red, _damageString);
+                    return;
+                }
+                InstantiatePopupAtPlayer(self, Color.red, _damageString);
             }
         }
 
@@ -58,6 +69,25 @@ namespace DamagePopups.Patches
             _textMesh.fontSize = 5f;
             _textMesh.font = Plugin.PopupFont;
             _damagePopup.AddComponent<PopupFadeOuter>();
+            Object.Destroy(GameObject.Find("New Game Object"));
+        }
+
+        private static void InstantiateLocalPopup(Color color, string text)
+        {
+            GameObject _statusText = GameObject.Find("GAME/HelmetUI/Pivot/Others/NextStep");
+            GameObject _damagePopupParent = Object.Instantiate(_statusText, GameObject.Find("GAME/HelmetUI/Pivot/Others").transform);
+            _damagePopupParent.name = "Local DMG popup";
+            Object.Destroy(_damagePopupParent.GetComponent<NextStepUI>());
+            Object.Destroy(_damagePopupParent.transform.Find("List").gameObject);
+            GameObject _damagePopup = _damagePopupParent.transform.Find("Item Name").gameObject;
+            _damagePopup.transform.localPosition = _statusText.transform.localPosition with { x = 460, y = -650 };
+            var _textMesh = _damagePopup.GetComponent<TextMeshProUGUI>();
+            _textMesh.alignment = TextAlignmentOptions.Center;
+            _textMesh.color = color;
+            _textMesh.text = text;
+            _textMesh.fontSize = 60f;
+            _textMesh.font = Plugin.PopupFont;
+             _damagePopup.AddComponent<UiPopupFadeOuter>();
             Object.Destroy(GameObject.Find("New Game Object"));
         }
     }
