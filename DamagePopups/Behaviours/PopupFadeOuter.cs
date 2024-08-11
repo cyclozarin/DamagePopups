@@ -24,6 +24,8 @@ namespace DamagePopups.Behaviours
             {
                 _counter += Time.deltaTime;
                 float _smoothValue = _counter / _fadeOutTime;
+                gameObject.transform.LookAt(MainCamera.instance.transform.position);
+                gameObject.transform.Rotate(new(0, 180, 0));
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, _randomDesiredFadeOutPosition, _fadeOutTime);
                 _textMesh.color = Color.Lerp(_textMesh.color, Color.black, _smoothValue);
                 _textMesh.alpha = Mathf.Lerp(_textMesh.alpha, 0f, _smoothValue);
