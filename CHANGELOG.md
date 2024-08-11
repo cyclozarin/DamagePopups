@@ -22,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Damage popups not cleaning up after fully fading out
 
-
 # [v1.0.0] - 08.08.2024
 
 ## Added
